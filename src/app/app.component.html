@@ -1,10 +1,11 @@
+<!-- Toolbar -->
 <div class="toolbar-container">
   <mat-toolbar class="toolbar" color="primary">
     <mat-icon aria-hidden="false" aria-hidden="check mark icon">fact_check</mat-icon>
     <h1>Habit Tracker</h1>
   </mat-toolbar>
 </div>
-
+<!-- Form -->
 <div class="add-form-container" *ngIf="adding || editing">
   <mat-card>
     <mat-card-title>Add New Habit </mat-card-title>
@@ -37,7 +38,7 @@
     </form>
   </mat-card>
 </div>
-
+<!-- Main screen -->
 <div class="all-habits" *ngIf="!adding && !editing">
   <h1>All Habits</h1>
   <button mat-raised-button color="accent" (click)="adding = !adding">Add New Habit</button>
