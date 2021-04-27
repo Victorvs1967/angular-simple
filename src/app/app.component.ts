@@ -1,14 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import { Habit } from './models/habit';
+import { FbService } from './service/fb.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+
+export class AppComponent implements OnInit {
+
+  constructor(public fb: FbService) {
+  }
+
+  ngOnInit(): void {
+  }
+
+  habits: Habit[] = this.fb.allHabits;
 
   public adding = false;
   public editing = false;
@@ -19,30 +29,16 @@ export class AppComponent {
     frequency: new FormControl(''),
     description: new FormControl(''),
   });
-
-  public habits: Habit[] = [
-    <Habit>{
-      name: '15 Minut Work',
-      frequency: 'Daily',
-      description: 'This habit makes my kitchen look nice and makes my day better the next morning.',
-    },
-    <Habit>{
-        name: 'Weed the Garden',
-        frequency: 'Weekly',
-        description: 'The weeds get so out of hand if they wait any longer, and I like how nice our home looks with a clean lawn.',
-    },
-  ];
-
+  
   public onSubmit() {
 
     const habit  = this.habitForm.value as Habit;
     
     if (this.editing) {
-      this.habits.splice(this.editingIndex, 1, habit);
+      this.fb.updateHabit(habit, this.editingIndex);
     } else {
-      this.habits.push(habit);
+      this.fb.saveHabit(habit);
     }
-
     this.exitForm();
   }
 
@@ -57,7 +53,7 @@ export class AppComponent {
   }
 
   public onDelete(index: number) {
-    this.habits.splice(index, 1);
+    this.fb.removeHabit(this.fb.allHabits[index]);
   }
 
   public exitForm() {

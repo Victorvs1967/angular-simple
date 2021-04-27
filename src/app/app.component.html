@@ -42,26 +42,28 @@
 <div class="all-habits" *ngIf="!adding && !editing">
   <h1>All Habits</h1>
   <button mat-raised-button color="accent" (click)="adding = !adding">Add New Habit</button>
-  <div *ngFor="let habit of habits; let i = index;">
-    <mat-card>
-      <mat-card-title>
-        <mat-icon class="habit-icon" color="accent" aria-hidden="false" aria-label="circle check mark icon">
-          check_circle_outline</mat-icon>
-        {{ habit.name }}
-      </mat-card-title>
-      <div class="detail-options">
-        <mat-icon class="habit-icon" color="primary" (click)="setEditForm(habit, i)">edit</mat-icon>
-        <mat-icon class="habit-icon" color="warn" (click)="onDelete(index)">remove_circle</mat-icon>
-      </div>
-      <mat-card-content>
-        <p>
-          <span class="detail-label">Frequency: </span>{{ habit.frequency }}
-        </p>
-        <p>
-          <span class="detail-label">Why is this habit important to me?</span>
-          <br>{{ habit.description }}
-        </p>
-      </mat-card-content>
-    </mat-card>
+  <div class="habit-cards">
+    <div *ngFor="let habit of habits; let i = index;">
+      <mat-card>
+        <mat-card-title>
+          <mat-icon class="habit-icon" color="accent" aria-hidden="false" aria-label="circle check mark icon">
+            check_circle_outline</mat-icon>
+          {{ habit.name }}
+        </mat-card-title>
+        <div class="detail-options">
+          <mat-icon class="habit-icon" color="primary" (click)="setEditForm(habit, i)">edit</mat-icon>
+          <mat-icon class="habit-icon" color="warn" (click)="onDelete(i)">remove_circle</mat-icon>
+        </div>
+        <mat-card-content>
+          <p>
+            <span class="detail-label">Frequency: </span>{{ habit.frequency }}
+          </p>
+          <p>
+            <span class="detail-label">Why is this habit important to me?</span>
+            <br>{{ habit.description }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+  </div>
   </div>
 </div>
