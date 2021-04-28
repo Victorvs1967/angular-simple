@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { Habit } from './models/habit';
+import { Skill } from './models/skill';
 import { FbService } from './service/fb.service';
 
 @Component({
@@ -13,20 +13,20 @@ import { FbService } from './service/fb.service';
 export class AppComponent implements OnInit {
 
   constructor(public fb: FbService) {
-    this.habits = this.fb.allHabits;
+    this.skills = this.fb.allSkills;
   }
 
   ngOnInit(): void {
-    this.fb.getHabits();
+    this.fb.getSkills();
   }
 
-  habits: Habit[];
+  skills: Skill[];
 
   public adding = false;
   public editing = false;
   public editingIndex: number;
 
-  public habitForm = new FormGroup({
+  public skillForm = new FormGroup({
     name: new FormControl(''),
     frequency: new FormControl(''),
     description: new FormControl(''),
@@ -34,20 +34,20 @@ export class AppComponent implements OnInit {
   
   public onSubmit() {
 
-    const habit  = this.habitForm.value as Habit;
+    const skill  = this.skillForm.value as Skill;
     
     if (this.editing) {
-      this.fb.updateHabit(habit, this.editingIndex);
-      this.habits.splice(this.editingIndex, 1, habit);
+      this.fb.updateSkill(skill, this.editingIndex);
+      this.skills.splice(this.editingIndex, 1, skill);
     } else {
-      this.fb.saveHabit(habit);
-      this.habits.push(habit);
+      this.fb.saveSkill(skill);
+      this.skills.push(skill);
     }
     this.exitForm();
   }
 
-  public setEditForm(habit: Habit, index: number) {
-    this.habitForm.patchValue({
+  public setEditForm(habit: Skill, index: number) {
+    this.skillForm.patchValue({
       name: habit.name,
       frequency: habit.frequency,
       description: habit.description,
@@ -57,13 +57,13 @@ export class AppComponent implements OnInit {
   }
 
   public onDelete(index: number) {
-    this.fb.removeHabit(index);
-    this.habits.splice(index, 1);
+    this.fb.removeSkill(index);
+    this.skills.splice(index, 1);
   }
 
   public exitForm() {
     this.adding = false;
     this.editing = false;
-    this.habitForm.reset();
+    this.skillForm.reset();
   }
 }

@@ -7,7 +7,7 @@ import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
 
-import { Habit } from '../models/habit';
+import { Skill } from '../models/skill';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD-OcKTvsc1uMb-A2xDr0aTCASVn_2p1Xk",
@@ -27,33 +27,33 @@ firebase.initializeApp(firebaseConfig);
 export class FbService {
 
   public fbase = firebase.database();
-  public allHabits: Habit[] = [];
+  public allSkills: Skill[] = [];
 
   constructor() {
 }
 
-  public saveHabit(habit: Habit) {
-    firebase.database().ref(`habits/id${(+new Date()).toString(16)}`).set(habit);
+  public saveSkill(skill: Skill) {
+    firebase.database().ref(`habits/id${(+new Date()).toString(16)}`).set(skill);
   }
 
-  public removeHabit(index: number) {
+  public removeSkill(index: number) {
     this.fbase.ref('habits').on('value', snapshot => {
       const keys = Object.keys(snapshot.val());
       this.fbase.ref(`habits/${keys[index]}`).remove();
     });
   }
 
-  public updateHabit(habitNew: Habit, index: number) {
+  public updateSkill(habitNew: Skill, index: number) {
     this.fbase.ref('habits').once('value', snapshot => {
       const keys = Object.keys(snapshot.val());
       this.fbase.ref(`habits/${keys[index]}`).update(habitNew);
     });
   }
 
-  public getHabits() {
+  public getSkills() {
     this.fbase.ref('habits').get().then(snapshot => {
-      const data: Habit[] = Object.values(snapshot.val()) || [];
-      data.forEach(item => this.allHabits.push(item));
+      const data: Skill[] = Object.values(snapshot.val()) || [];
+      data.forEach(item => this.allSkills.push(item));
     })
   }
   

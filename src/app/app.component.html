@@ -1,8 +1,18 @@
 <!-- Toolbar -->
 <div class="toolbar-container">
   <mat-toolbar class="toolbar" color="primary">
-    <mat-icon aria-hidden="false" aria-hidden="check mark icon">fact_check</mat-icon>
-    <h1>Skills Tracker</h1>
+    <button mat-button href="#" class="toolbar-title">
+      <mat-icon aria-hidden="false" aria-hidden="check mark icon">fact_check</mat-icon>
+      <span>Skills Tracker</span>
+    </button>
+    <span class="menu-spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-icon" aria-label="Button with menu icon">
+      <mat-icon aria-hidden="false" aria-hidden="check mark icon">menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="adding = !adding">Add Skill</button>
+      <button mat-menu-item>Item 2</button>
+    </mat-menu>
   </mat-toolbar>
 </div>
 <!-- Form -->
@@ -10,7 +20,7 @@
   <mat-card>
     <mat-card-title>Add New Skill </mat-card-title>
     <hr>
-    <form [formGroup]="habitForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="skillForm" (ngSubmit)="onSubmit()">
       <mat-card-content>
         <mat-form-field appearance="fill">
           <mat-label>Title</mat-label>
@@ -39,28 +49,27 @@
   </mat-card>
 </div>
 <!-- Main screen -->
-<div class="all-habits" *ngIf="!adding && !editing">
+<div class="all-skills" *ngIf="!adding && !editing">
   <h1>All Skills</h1>
-  <button mat-raised-button color="accent" (click)="adding = !adding">Add New Skill</button>
-  <div class="habit-cards">
-    <div *ngFor="let habit of habits; let i = index;">
+  <div class="skills-cards">
+    <div *ngFor="let skill of skills; let i = index;">
       <mat-card>
         <mat-card-title>
-          <mat-icon class="habit-icon" color="accent" aria-hidden="false" aria-label="circle check mark icon">
+          <mat-icon class="skills-icon" color="accent" aria-hidden="false" aria-label="circle check mark icon">
             check_circle_outline</mat-icon>
-          {{ habit.name }}
+          {{ skill.name }}
         </mat-card-title>
         <div class="detail-options">
-          <mat-icon class="habit-icon" color="primary" (click)="setEditForm(habit, i)">edit</mat-icon>
-          <mat-icon class="habit-icon" color="warn" (click)="onDelete(i)">remove_circle</mat-icon>
+          <mat-icon class="skills-icon" color="primary" (click)="setEditForm(skill, i)">edit</mat-icon>
+          <mat-icon class="skills-icon" color="warn" (click)="onDelete(i)">remove_circle</mat-icon>
         </div>
         <mat-card-content>
           <p>
-            <span class="detail-label">Frequency: </span>{{ habit.frequency }}
+            <span class="detail-label">Frequency: </span>{{ skill.frequency }}
           </p>
           <p>
             <span class="detail-label">Why is this skill important to me?</span>
-            <br>{{ habit.description }}
+            <br>{{ skill.description }}
           </p>
         </mat-card-content>
       </mat-card>

@@ -1,4 +1,4 @@
-export class Habit {
+export class Skill {
   name: string;
   frequency: string;
   description: string;
