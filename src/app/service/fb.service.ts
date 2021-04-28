@@ -6,7 +6,6 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
-import { Observable } from 'rxjs';
 
 import { Habit } from '../models/habit';
 
@@ -27,53 +26,35 @@ firebase.initializeApp(firebaseConfig);
 })
 export class FbService {
 
-  public allHabits: Habit[];
+  public fbase = firebase.database();
+  public allHabits: Habit[] = [];
 
   constructor() {
-    this.allHabits = [];
-    this.getHabits();
 }
 
   public saveHabit(habit: Habit) {
     firebase.database().ref(`habits/id${(+new Date()).toString(16)}`).set(habit);
   }
 
-  public removeHabit(habit: Habit) {
-    const database = firebase.database();
-    database.ref('habits').on('value', snapshot => {
+  public removeHabit(index: number) {
+    this.fbase.ref('habits').on('value', snapshot => {
       const keys = Object.keys(snapshot.val());
-      const index = Object.values(snapshot.val()).findIndex(item => item['name'] == habit.name && item['frequency'] == habit.frequency && item['description'] == habit.description);
-      database.ref(`habits/${keys[index]}`).remove();
+      this.fbase.ref(`habits/${keys[index]}`).remove();
     });
   }
 
   public updateHabit(habitNew: Habit, index: number) {
-    const habit = this.allHabits[index];
-    const database = firebase.database();
-    database.ref('habits').on('value', snapshot => {
+    this.fbase.ref('habits').once('value', snapshot => {
       const keys = Object.keys(snapshot.val());
-      const indx = Object.values(snapshot.val()).findIndex(item => item['name'] == habit.name && item['frequency'] == habit.frequency && item['description'] == habit.description);
-      if (keys[indx] != 'undefined') {
-        database.ref(`habits/${keys[indx]}`).update(habitNew);
-      }
+      this.fbase.ref(`habits/${keys[index]}`).update(habitNew);
     });
   }
 
   public getHabits() {
-    let arr: Habit[];
-    firebase.database().ref('habits').on('value', snapshot => {
-      const data = snapshot.val() || [];
-      Object.values(data).forEach(item => {
-        const habit: Habit = <Habit>{
-          name: item['name'],
-          frequency: item['frequency'],
-          description: item['description'],
-        };
-        if (!this.allHabits.includes(habit)) {
-          this.allHabits.push(habit);
-        }
-      });
+    this.fbase.ref('habits').get().then(snapshot => {
+      const data: Habit[] = Object.values(snapshot.val()) || [];
+      data.forEach(item => this.allHabits.push(item));
     })
   }
-
+  
 }

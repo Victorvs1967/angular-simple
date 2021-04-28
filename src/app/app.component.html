@@ -2,13 +2,13 @@
 <div class="toolbar-container">
   <mat-toolbar class="toolbar" color="primary">
     <mat-icon aria-hidden="false" aria-hidden="check mark icon">fact_check</mat-icon>
-    <h1>Habit Tracker</h1>
+    <h1>Skills Tracker</h1>
   </mat-toolbar>
 </div>
 <!-- Form -->
 <div class="add-form-container" *ngIf="adding || editing">
   <mat-card>
-    <mat-card-title>Add New Habit </mat-card-title>
+    <mat-card-title>Add New Skill </mat-card-title>
     <hr>
     <form [formGroup]="habitForm" (ngSubmit)="onSubmit()">
       <mat-card-content>
@@ -28,7 +28,7 @@
         <br />
         <mat-form-field appearance="fill">
           <mat-label>Description</mat-label>
-          <textarea formControlName="description" matInput placeholder="Why is this habit important for you?"></textarea>
+          <textarea formControlName="description" matInput placeholder="Why is this skill important for you?"></textarea>
         </mat-form-field>
       </mat-card-content>
       <mat-card-actions>
@@ -40,8 +40,8 @@
 </div>
 <!-- Main screen -->
 <div class="all-habits" *ngIf="!adding && !editing">
-  <h1>All Habits</h1>
-  <button mat-raised-button color="accent" (click)="adding = !adding">Add New Habit</button>
+  <h1>All Skills</h1>
+  <button mat-raised-button color="accent" (click)="adding = !adding">Add New Skill</button>
   <div class="habit-cards">
     <div *ngFor="let habit of habits; let i = index;">
       <mat-card>
@@ -59,7 +59,7 @@
             <span class="detail-label">Frequency: </span>{{ habit.frequency }}
           </p>
           <p>
-            <span class="detail-label">Why is this habit important to me?</span>
+            <span class="detail-label">Why is this skill important to me?</span>
             <br>{{ habit.description }}
           </p>
         </mat-card-content>

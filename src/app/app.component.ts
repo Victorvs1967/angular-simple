@@ -13,12 +13,14 @@ import { FbService } from './service/fb.service';
 export class AppComponent implements OnInit {
 
   constructor(public fb: FbService) {
+    this.habits = this.fb.allHabits;
   }
 
   ngOnInit(): void {
+    this.fb.getHabits();
   }
 
-  habits: Habit[] = this.fb.allHabits;
+  habits: Habit[];
 
   public adding = false;
   public editing = false;
@@ -36,8 +38,10 @@ export class AppComponent implements OnInit {
     
     if (this.editing) {
       this.fb.updateHabit(habit, this.editingIndex);
+      this.habits.splice(this.editingIndex, 1, habit);
     } else {
       this.fb.saveHabit(habit);
+      this.habits.push(habit);
     }
     this.exitForm();
   }
@@ -53,7 +57,8 @@ export class AppComponent implements OnInit {
   }
 
   public onDelete(index: number) {
-    this.fb.removeHabit(this.fb.allHabits[index]);
+    this.fb.removeHabit(index);
+    this.habits.splice(index, 1);
   }
 
   public exitForm() {
