@@ -8,15 +8,14 @@ import { FbService, fb_main } from './fb.service';
 })
 export class AuthService {
 
-
   auth;
+  user: null;
+  public logedIn = false;
 
   constructor(public fb: FbService) { 
     this.auth = fb_main.auth()
   }
 
-  setUsers = {
-  user: null,
   initUser(handler) {
     this.auth.onAuthStateChanged(user => {
       if (user) {
@@ -26,14 +25,15 @@ export class AuthService {
       }
       if (handler) handler();
     });    
-  },
+  }
 
-  logIn(email, password) {
+  logIn(email, password, form) {
     // Sign in with email and pass.
     // [START authwithemail]
     this.auth.signInWithEmailAndPassword(email, password)
     .then(data => {
-      loginForm.reset();
+      this.logedIn = true;
+      form.reset();
     })
     .catch(function(error) {
       // Handle Errors here.
@@ -46,23 +46,23 @@ export class AuthService {
         alert(errorMessage);
       }
       console.log(error);
-      document.getElementById('quickstart-sign-in').disabled = false;
+      // document.getElementById('quickstart-sign-in').disabled = false;
       // [END_EXCLUDE]
     });
     // [END authwithemail]
-  },
+  }
 
   logOut() {
     this.auth.signOut();
-  },
+  }
 
-  signUp(email, password, handler) {
+  signUp(email, password, handler, form) {
     // Create user with email and pass.
     // [START createwithemail]
     this.auth.createUserWithEmailAndPassword(email, password)
     .then(data => {
-      loginForm.reset();
-      this.editUser(email.split('@')[0], null, handler);
+      form.reset();
+      this.editUser(email.split('@')[0], null, handler, form);
     })
     .catch(error => {
       // Handle Errors here.
@@ -78,9 +78,9 @@ export class AuthService {
       // [END_EXCLUDE]
     });
     // [END createwithemail]
-  },
+  }
 
-  editUser(displayName, photoURL, handler) {
+  editUser(displayName, photoURL, handler, form) {
     const user = this.auth.currentUser;
     if (displayName) {
       if (photoURL) {
@@ -94,8 +94,8 @@ export class AuthService {
         }).then(handler)
       }
     }
-    editElem.reset();
-  },
+    form.reset();
+  }
 
   sendForget(email) {
     this.auth.sendPasswordResetEmail(email)
@@ -106,6 +106,3 @@ export class AuthService {
     });        
   }
 } 
-
-
-}

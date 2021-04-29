@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import { Skill } from './models/skill';
+import { User } from './models/user';
+import { AuthService } from './service/auth.service';
 import { FbService } from './service/fb.service';
 
 @Component({
@@ -12,7 +14,7 @@ import { FbService } from './service/fb.service';
 
 export class AppComponent implements OnInit {
 
-  constructor(public fb: FbService) {
+  constructor(public fb: FbService, public auth: AuthService) {
     this.fb.getSkills();
     this.skills = this.fb.allSkills;
   }
@@ -25,6 +27,12 @@ export class AppComponent implements OnInit {
   public adding = false;
   public editing = false;
   public editingIndex: number;
+  logedIn = this.auth.logedIn;
+
+  public loginForm = new FormGroup({
+    email: new FormControl(''),
+    password: new FormControl(''),
+  });
 
   public skillForm = new FormGroup({
     name: new FormControl(''),
@@ -44,6 +52,22 @@ export class AppComponent implements OnInit {
       this.skills = [skill, ...this.skills];
     }
     this.exitForm();
+  }
+
+  public onLoginSubmit() {
+
+    const user  = this.loginForm.value as User;
+    this.auth.logIn(user.email, user.password, this.loginForm);
+    this.logedIn = true;
+    this.loginForm.reset();
+  }
+
+  public onSignupSubmit() {
+
+    const user  = this.loginForm.value as User;
+    console.log(user);
+    this.auth.signUp(user.email, user.password, null, this.loginForm);
+    this.loginForm.reset();
   }
 
   public setEditForm(habit: Skill, index: number) {

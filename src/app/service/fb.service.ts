@@ -5,6 +5,8 @@ import firebase from "firebase/app";
 // Add the Firebase products that you want to use
 import "firebase/database";
 import "firebase/firestore";
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Skill } from '../models/skill';
 
@@ -25,10 +27,13 @@ export const fb_main = firebase.initializeApp(firebaseConfig);
 })
 export class FbService {
 
-  public fbase = fb_main.database();
-  public allSkills: Skill[] = [];
+  public fbase;
+  public allSkills: Skill[];
 
-  constructor() {}
+  constructor() {
+    this.fbase = fb_main.database();
+    this.allSkills = [];
+  }
 
   public saveSkill(skill: Skill) {
     this.fbase.ref(`skills/id${(+new Date()).toString(16)}`).set(skill);
@@ -48,6 +53,17 @@ export class FbService {
     });
   }
 
+  public getData(): Observable<Skill[]> {
+    return this.fbase.ref('skills').get()
+      .pipe(snapshot => {
+        console.log(snapshot);
+        const data: Skill[] = Object.values(snapshot) || [];
+        data.sort(this.sortDesc);
+        return data.map(item => item);
+    }
+    )
+  }
+  
   public getSkills() {
     try {
       this.fbase.ref('skills').get().then(snapshot => {

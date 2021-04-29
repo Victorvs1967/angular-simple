@@ -15,8 +15,32 @@
     </mat-menu>
   </mat-toolbar>
 </div>
+<!-- Login Form -->
+<div class="add-form-container" *ngIf="!auth.logedIn">
+  <mat-card>
+    <mat-card-title>Login</mat-card-title>
+    <hr>
+    <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+      <mat-card-content>
+        <mat-form-field appearance="fill">
+          <mat-label>email</mat-label>
+          <input type="email" matInput formControlName="email" />
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="fill">
+          <mat-label>password</mat-label>
+          <input type="password" matInput formControlName="password" />
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent" type="submit">Login</button>
+        <button mat-raised-button (click)="onSignupSubmit()">Sign Up</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>
 <!-- Form -->
-<div class="add-form-container" *ngIf="adding || editing">
+<div class="add-form-container" *ngIf="(adding || editing) && logedIn">
   <mat-card>
     <mat-card-title>Add New Skill </mat-card-title>
     <hr>
@@ -49,7 +73,7 @@
   </mat-card>
 </div>
 <!-- Main screen -->
-<div class="all-skills" *ngIf="!adding && !editing">
+<div class="all-skills" *ngIf="!adding && !editing && logedIn">
   <h1>All Skills</h1>
   <div class="skills-cards">
     <div *ngFor="let skill of skills; let i = index;">
