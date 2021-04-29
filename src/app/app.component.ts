@@ -70,6 +70,11 @@ export class AppComponent implements OnInit {
     this.loginForm.reset();
   }
 
+  public logout() {
+    this.logedIn = false;
+    this.auth.logOut();
+  }
+
   public setEditForm(habit: Skill, index: number) {
     this.skillForm.patchValue({
       name: habit.name,
