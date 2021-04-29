@@ -1,7 +1,24 @@
-const setUsers = {
+import "firebase/auth";
+
+import { Injectable } from '@angular/core';
+import { FbService, fb_main } from './fb.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+
+
+  auth;
+
+  constructor(public fb: FbService) { 
+    this.auth = fb_main.auth()
+  }
+
+  setUsers = {
   user: null,
   initUser(handler) {
-    firebase.auth().onAuthStateChanged(user => {
+    this.auth.onAuthStateChanged(user => {
       if (user) {
         this.user = user;    
       } else {
@@ -14,7 +31,7 @@ const setUsers = {
   logIn(email, password) {
     // Sign in with email and pass.
     // [START authwithemail]
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    this.auth.signInWithEmailAndPassword(email, password)
     .then(data => {
       loginForm.reset();
     })
@@ -36,13 +53,13 @@ const setUsers = {
   },
 
   logOut() {
-    firebase.auth().signOut();
+    this.auth.signOut();
   },
 
   signUp(email, password, handler) {
     // Create user with email and pass.
     // [START createwithemail]
-    firebase.auth().createUserWithEmailAndPassword(email, password)
+    this.auth.createUserWithEmailAndPassword(email, password)
     .then(data => {
       loginForm.reset();
       this.editUser(email.split('@')[0], null, handler);
@@ -64,7 +81,7 @@ const setUsers = {
   },
 
   editUser(displayName, photoURL, handler) {
-    const user = firebase.auth().currentUser;
+    const user = this.auth.currentUser;
     if (displayName) {
       if (photoURL) {
         user.updateProfile({
@@ -81,7 +98,7 @@ const setUsers = {
   },
 
   sendForget(email) {
-    firebase.auth().sendPasswordResetEmail(email)
+    this.auth.sendPasswordResetEmail(email)
     .then(() => {
       alert('Email send')
     }).catch(error => {
@@ -89,3 +106,6 @@ const setUsers = {
     });        
   }
 } 
+
+
+}

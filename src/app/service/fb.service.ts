@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import firebase from "firebase/app";
 // Add the Firebase products that you want to use
-import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
 
@@ -19,42 +18,50 @@ const firebaseConfig = {
   appId: "1:3918306004:web:c9190887df0fca1e27f941"
 };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+export const fb_main = firebase.initializeApp(firebaseConfig);
 
 @Injectable({
   providedIn: 'root'
 })
 export class FbService {
 
-  public fbase = firebase.database();
+  public fbase = fb_main.database();
   public allSkills: Skill[] = [];
 
-  constructor() {
-}
+  constructor() {}
 
   public saveSkill(skill: Skill) {
-    firebase.database().ref(`habits/id${(+new Date()).toString(16)}`).set(skill);
+    this.fbase.ref(`skills/id${(+new Date()).toString(16)}`).set(skill);
   }
 
   public removeSkill(index: number) {
-    this.fbase.ref('habits').on('value', snapshot => {
-      const keys = Object.keys(snapshot.val());
-      this.fbase.ref(`habits/${keys[index]}`).remove();
+    this.fbase.ref('skills').get().then(snapshot => {
+      const keys = Object.keys(snapshot.val()).sort(this.sortDesc);
+      this.fbase.ref(`skills/${keys[index]}`).remove();
     });
   }
 
   public updateSkill(habitNew: Skill, index: number) {
-    this.fbase.ref('habits').once('value', snapshot => {
+    this.fbase.ref('skills').once('value', snapshot => {
       const keys = Object.keys(snapshot.val());
-      this.fbase.ref(`habits/${keys[index]}`).update(habitNew);
+      this.fbase.ref(`skills/${keys[index]}`).update(habitNew);
     });
   }
 
   public getSkills() {
-    this.fbase.ref('habits').get().then(snapshot => {
+    try {
+      this.fbase.ref('skills').get().then(snapshot => {
       const data: Skill[] = Object.values(snapshot.val()) || [];
+      data.sort(this.sortDesc);
       data.forEach(item => this.allSkills.push(item));
     })
+    } catch {
+      console.log('Database empty...');
+    } 
+  }
+
+  sortDesc(a, b): number {
+    return a < b ? 1 : -1;
   }
   
 }

@@ -13,11 +13,11 @@ import { FbService } from './service/fb.service';
 export class AppComponent implements OnInit {
 
   constructor(public fb: FbService) {
+    this.fb.getSkills();
     this.skills = this.fb.allSkills;
   }
 
   ngOnInit(): void {
-    this.fb.getSkills();
   }
 
   skills: Skill[];
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       this.skills.splice(this.editingIndex, 1, skill);
     } else {
       this.fb.saveSkill(skill);
-      this.skills.push(skill);
+      this.skills = [skill, ...this.skills];
     }
     this.exitForm();
   }

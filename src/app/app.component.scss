@@ -14,11 +14,6 @@
 .menu-spacer {
   flex: 1 1 auto;
 }
-.all-skills {
-  margin: auto;
-  margin-top: 5rem;
-  max-width: 90%;
-}
 .add-form-container {
   padding: 4em;
   text-align: center;
@@ -44,18 +39,19 @@ mat-form-field {
 button:hover .detail-options {
   cursor: pointer;
 }
-.all-habits {
+.all-skills {
+  margin-top: 5rem;
   text-align: center;
 }
-.all-habits h1 {
+.all-skills h1 {
   margin-top: 1rem;
 }
-.all-habits mat-card {
-  width: 60%;
+.all-skills mat-card {
+  width: 80%;
   margin: 1em auto;
   text-align: left;
 }
-.habit-icon {
+.skill-icon {
   vertical-align: middle;
   padding-bottom: 3px;
   font-weight: 700;
